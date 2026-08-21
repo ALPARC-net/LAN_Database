@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Visitor Management Measures</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background: #f2f2f2; 
+  }
+
+  @media (prefers-color-scheme: dark) {
+    html, body {
+      background: transparent;
+    }
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---------- TITLE ---------- */
+  header {
+    background: #0C5C5F;
+    color: #fff;
+    padding: 1.5vh 2vw;
+    font-size: 2.2vh;
+    font-weight: bold;
+    flex: none;
+  }
+
+  iframe {
+    flex: 1;
+    width: 100%;
+    border: none;
+    display: block;
+  }
+
+  /* ---------- LOGO / ACKNOWLEDGEMENT FOOTER ---------- */
+  footer {
+    flex: none;
+    padding: 1vh 2vw;
+    text-align: center;
+    background: #fff;
+    border-top: 1px solid #ddd;
+  }
+  footer img {
+    max-height: 8vh;
+  }
+</style>
+</head>
+<body>
+ 
+<header>Visitor Management Measures for Alpine Protected Areas</header>
+
+<iframe src="https://grist.numerique.gouv.fr/o/docs/oT2ip83BcyR5/LiveAlpsNature-or-Visitor-Management-Measure-Database?embed=true"></iframe>
+
+<footer style="display:flex; justify-content:space-between; align-items:center; padding:1vh 2vw; background:#fff; border-top:1px solid #ddd;">
+  <a href="https://www.alpine-space.eu/project/livealpsnature/" target="_blank" rel="noopener">
+    <img src="https://raw.githubusercontent.com/ALPARC-net/LAN_Database/refs/heads/main/LiveAlpsNature_Logo_Landscape.svg" alt="LiveAlpsNature logo" style="height:10vh; width:auto; max-height:10vh;">
+  </a>
+  <div style="font-size:1.7vh; line-height:1.4; text-align:right; color:#333; max-width:50%;">
+    The LiveAlpsNature project (ASP0500464) is co-funded by the European Union through the Interreg Alpine Space programme.<br>
+    <a href="https://www.alpine-space.eu/project/livealpsnature/" target="_blank" rel="noopener" style="color:#0C5C5F;">
+      www.alpine-space.eu/project/livealpsnature
+    </a>
+  </div>
+</footer>
+
+</body>
+</html>
