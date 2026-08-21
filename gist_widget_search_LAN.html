@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
+  <style>
+    html, body, input, label, div, span, button {
+      margin-left: 3px;
+      padding: 0;
+      background: transparent;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif !important;
+      font-size: 14px !important;
+      vertical-align: middle;
+    }
+
+    #search {
+      width: 40%;
+      margin-left: 0px !important;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif !important;
+      font-size: inherit !important;
+      background: transparent;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px 8px;
+      outline: none;
+      
+    }
+    .label {
+      padding: 8px !important;
+      margin-left: 3px !important;
+      vertical-align: middle !important;
+    }
+    .deep-search {
+      display: flex;
+      align-items: center;
+      margin-left: 0px !important;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+    
+    .deep-search input[type="checkbox"] {
+      width: auto;
+      margin-left: 0px !important;
+      padding: 0px;
+    }
+  </style>
+</head>
+<body>
+    <div style="display:flex; align-items:center; gap:8px;">
+    <input id="search" type="text" placeholder="Start typing…">
+    <input type="checkbox" id="deepSearch">
+    <label for="deepSearch">Search also in measure details</label>
+</div>
+</label>
+</label>
+   <script>
+    let allRows = [];
+
+    function normalize(value) {
+      return String(value ?? "").toLowerCase();
+    }
+
+    function applyFilter() {
+      const query = normalize(document.getElementById("search").value.trim());
+
+      if (!query) {
+        
+        grist.setSelectedRows(allRows.map(row => row.id));
+        return;
+      }
+
+       const deep = document.getElementById("deepSearch").checked;
+  
+        function fullText(row) {
+          const lists = ["Approach", "Effect", "Activity"]
+            .map(col => Array.isArray(row[col]) ? row[col].filter(v => v !== "L").join(" ") : "");
+          return [
+            row.Measure, row.Description, row.Limits,
+            row.Climate, row.Examples, ...lists
+          ].join(" ");
+        }
+        
+        const filtered = allRows.filter(row =>
+          normalize(row.Measure).includes(query) ||
+          (deep && normalize(fullText(row)).includes(query))
+        );
+
+
+      grist.setSelectedRows(filtered.map(row => row.id));
+    }
+
+    document.getElementById("search").addEventListener("input", applyFilter);
+    document.getElementById("deepSearch").addEventListener("change", applyFilter);
+
+    grist.ready({ requiredAccess: "read table", allowSelectBy: true });
+
+    grist.onRecords((records) => {
+      allRows = records || [];
+      applyFilter();
+    });
+  </script>
+  </body>
+</html>
