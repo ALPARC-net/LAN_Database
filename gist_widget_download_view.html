@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { padding: 8px; }
+    button {
+      padding: 8px 14px;
+      font-size: 13px;
+      border: 1px solid #0C5C5F;
+      background: inherit;
+      color: inherit;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:disabled { background: #ccc; border-color: #ccc; cursor: default; }
+  </style>
+</head>
+<body>
+  <button id="downloadBtn" disabled>current measure (.xlsx)</button>
+
+  <script>
+    let currentRecord = null;
+
+    grist.ready({ requiredAccess: "read table" });
+
+    function decodeList(value) {
+      if (Array.isArray(value) && value[0] === "L") return value.slice(1);
+      if (Array.isArray(value)) return value;
+      return [];
+    }
+
+    grist.onRecord((record) => {
+      currentRecord = record;
+      document.getElementById("downloadBtn").disabled = !record;
+    });
+
+   document.getElementById("downloadBtn").addEventListener("click", () => {
+    if (!currentRecord) return;
+    const r = currentRecord;
+    const rows = [
+      ["Measure name", r.Measure || ""],
+      ["Approach", decodeList(r.Approach).join("; ")],
+      ["Effect", decodeList(r.Effect).join("; ")],
+      ["Activity", decodeList(r.Activity).join("; ")],
+      ["General description", r.Description || ""],
+      ["Possible issues", r.Limits || ""],
+      ["Climate change", r.Climate || ""],
+      ["Examples", r.Examples || ""],
+    ];
+    const worksheet = XLSX.utils.aoa_to_sheet(rows);
+    worksheet["!cols"] = [{ wch: 20 }, { wch: 70 }];
+    const workbook = XLSX.utils.book_new();
+  
+    const safeName = (r.Measure || "measure").replace(/[\\/:*?"<>| ]/g, "_");
+  
+    XLSX.utils.book_append_sheet(workbook, worksheet, safeName);
+    XLSX.writeFile(workbook, "LAN_measures_" + safeName + ".xlsx");
+  });
+  </script>
+</body>
+</html>
